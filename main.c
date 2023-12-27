@@ -68,3 +68,76 @@ for(i=0;i<SIZE;i++)
     printf("%s" ,"\nOutput is stored in the output file \n");
     fclose(fptr);
 }
+void SJFS_nonpreemptive(struct linkedList process[])
+
+{
+	
+	FILE *fptr;
+	fptr = fopen("output.txt", "a");
+	if (fptr == NULL)
+	{
+		printf("Error!");
+		exit(1);
+	}
+	
+	
+    	struct linkedList *temp, list, list2;
+   	 	temp = (struct linkedList *) malloc (SIZE*sizeof(struct linkedList));
+    	int i,a,b;
+    	int totalWaitingTime=0;
+    	double averageWaitingTime;
+
+    for(i=0;i<SIZE;i++) {
+        temp[i] = process[i];
+        
+    }
+
+    for(a=1;a<SIZE;a++) {
+        for (b = 0; b < SIZE - a; b++) 
+		
+		{
+           		if (temp[b].aTime > temp[b + 1].aTime) {
+            list2 = temp[b];
+            temp[b] = temp[b + 1];
+            temp[b + 1] = list2;
+            
+            }
+        }
+    }
+
+    for(a=2;a<SIZE;a++) {
+        for (b = 1; b < SIZE - a+1; b++) 
+		{
+            	if (temp[b].bTime > temp[b + 1].bTime) {
+            list = temp[b];
+            temp[b] = temp[b + 1];
+            temp[b + 1] = list;
+            }
+        }
+    }
+
+    totalWaitingTime = temp[0].wTime = 0;
+
+    for(i = 1; i < SIZE; i++)
+	
+	{
+        temp[i].wTime = (temp[i-1].bTime + temp[i-1].aTime + temp[i-1].wTime) - temp[i].aTime;
+        totalWaitingTime += temp[i].wTime;
+    }
+
+    averageWaitingTime = (double)totalWaitingTime/SIZE;
+
+    for(a=1;a<SIZE;a++) 
+	
+	{
+        for (b = 0; b < SIZE - a; b++) 
+		
+		{
+            	if (temp[b].Name > temp[b + 1].Name) {
+            list = temp[b];
+            temp[b] = temp[b + 1];
+            temp[b + 1] = list;
+            }
+        }
+    }
+}
