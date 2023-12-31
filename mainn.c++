@@ -159,3 +159,22 @@ int main(int argc, char** argv) {
         processes[i].Name = i + 1;
         i++;
     }
+ inputFile.close(); 
+    std::ofstream outputFile("output.txt", std::ios::trunc);
+
+    std::cout << "\t\t\t\t\t CPU-Scheduler Simulator\n";
+
+    std::ifstream resultFile; // show-here
+     do {
+        if (mode == 0)
+            std::cout << "\nMODE : Preemptive\n\n";
+        else if (mode == 1)
+            std::cout << "\nMODE : Non-Preemptive\n";
+
+        std::cout << "1) Scheduling Method (None)\n";
+        std::cout << "2) Preemptive Mode\n";
+        std::cout << "3) Non-Preemptive Mode\n";
+        std::cout << "4) Show Result\n";
+        std::cout << "5) End Program\n";
+        std::cout << "Option> ";
+        std::cin >> option;
