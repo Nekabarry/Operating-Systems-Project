@@ -6,9 +6,9 @@ CPU Scheduler Simulator
   
 2. This file should have three columns and unlimited rows. It must be text and fields should delimit by “:” character. Below table represent structure of this file.
    
-BurstTime ArrivalTime Priority
-10           0         0 
-5            0         0
+BurstTime      ArrivalTime           Priority
+  10                0                     0 
+  5                 0                     0
 
 Some data fields may not use at decision process so you can omits the values. But every process should have three of these values. At the Appendix section input.txt file given as example.
        
@@ -42,4 +42,4 @@ e) Appendix section has screen and file outputs. Please create same output for y
 a) The average waiting time that all jobs spend in the wait queue.
 b) The waiting time that each job spends in the wait queue.
 
-5. You can get more information for CPU Scheduling methods from your text book (chapter 5). Some Scheduling methods not run in Preemptive mode. So take care about it.
+5. You can get more information for CPU Scheduling methods. Some Scheduling methods not run in Preemptive mode. So take care about it.
