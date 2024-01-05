@@ -192,3 +192,24 @@ int main(int argc, char** argv) {
                 std::cout << "5) Back\n";
                 std::cout << "\n\n";
                 std::cout << "Option> ";
+                switch (option2) {
+                    case 1:
+                        FCFserve(processes);
+                        break;
+                    case 2:
+                        SJF(processes);
+                        break;
+                    case 3:
+                        PriorityScheduling(processes);
+                        break;
+                    case 4:
+                        std::cout << "Enter Quantum Time: ";
+                        std::cin >> quantumTime;
+                        RoundR(processes, quantumTime);
+                        break;
+                    case 5:
+                        break;
+                    default:
+                        std::cout << "Invalid Option Please select From 1 - 5\n";
+                        break;
+                }
