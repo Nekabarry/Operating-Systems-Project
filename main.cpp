@@ -12,22 +12,19 @@ struct PSimulator {
     int bTime; // Burst Time
     int aTime; // Arrival Time
     int wTime; // Waiting Time
-    int pr;     // Priority
+    int p;     // Priority
     int sr;    // Show Result
 };
-
 void FCFserve(std::vector<PSimulator>& processes) {
     std::sort(processes.begin(),processes.end(), [](const PSimulator& a, const PSimulator& b) {
         return a.aTime < b.aTime;
     });
-
     int totalWaitingTime = 0;
 
     for (int i = 1; i < SIZE; i++) {
         processes[i].wTime = processes[i - 1].bTime + processes[i - 1].aTime + processes[i - 1].wTime - processes[i].aTime;
         totalWaitingTime += processes[i].wTime;
     }
-
     double averageWaitingTime = static_cast<double>(totalWaitingTime) / SIZE;
 
     std::ofstream outputFile("output.txt", std::ios::app);
@@ -70,14 +67,12 @@ void PriorityScheduling(std::vector<PSimulator>& processes) {
     std::sort(processes.begin(), processes.end(), [](const PSimulator& a, const PSimulator& b) {
         return a.p < b.p;
     });
-
     int totalWaitingTime = 0;
 
     for (int i = 1; i < SIZE; i++) {
         processes[i].wTime = processes[i - 1].bTime + processes[i - 1].aTime + processes[i - 1].wTime;
         totalWaitingTime += processes[i].wTime;
     }
-
     double averageWaitingTime = static_cast<double>(totalWaitingTime) / SIZE;
 
     std::ofstream outputFile("output.txt", std::ios::app);
@@ -146,12 +141,12 @@ int main(int argc, char** argv) {
     int i = 0;
     int mode = 0;
     int option = 0;
-    int option1 = 0;
+    int option2 = 0;
     int quantumTime = 0;
 
     std::ifstream inputFile("input.txt");
     if (!inputFile.is_open()) {
-        std::cerr << "Error opening input file\n";
+        std::cerr << "file error input file\n";
         return 1;
     }
 
@@ -192,6 +187,8 @@ int main(int argc, char** argv) {
                 std::cout << "5) Back\n";
                 std::cout << "\n\n";
                 std::cout << "Option> ";
+                std::cin >> option2;
+
                 switch (option2) {
                     case 1:
                         FCFserve(processes);
