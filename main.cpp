@@ -9,21 +9,21 @@
 
 struct PSimulator {
     int Name;//Name
-    int bTime; // Burst Time
-    int aTime; // Arrival Time
-    int wTime; // Waiting Time
+    int burstT; // Burst-Time
+    int arrivalT; // Arrival-Time
+    int waitingT; // Waiting-Time
     int p;     // Priority
     int sr;    // Show Result
 };
 void FCFserve(std::vector<PSimulator>& processes) {
     std::sort(processes.begin(),processes.end(), [](const PSimulator& a, const PSimulator& b) {
-        return a.aTime < b.aTime;
+        return a.arrivalT < b.arrivalT;
     });
     int totalWaitingTime = 0;
 
     for (int i = 1; i < SIZE; i++) {
-        processes[i].wTime = processes[i - 1].bTime + processes[i - 1].aTime + processes[i - 1].wTime - processes[i].aTime;
-        totalWaitingTime += processes[i].wTime;
+        processes[i].waitingT = processes[i - 1].burstT + processes[i - 1].arrivalT + processes[i - 1].waitingT - processes[i].arrivalT;
+        totalWaitingTime += processes[i].waitingT;
     }
     double averageWaitingTime = static_cast<double>(totalWaitingTime) / SIZE;
 
@@ -31,7 +31,7 @@ void FCFserve(std::vector<PSimulator>& processes) {
     outputFile << "\nScheduling Method: First Come First Served\nProcess Waiting Times:\n";
 
     for (int i = 0; i < SIZE; i++) {
-        outputFile << "\nP" << processes[i].Name << ": " << processes[i].wTime << " ms";
+        outputFile << "\nP" << processes[i].Name << ": " << processes[i].waitingT << " ms";
     }
 
     outputFile << "\nAverage waiting time: " << averageWaitingTime << " ms\n";
@@ -40,14 +40,14 @@ void FCFserve(std::vector<PSimulator>& processes) {
 
 void SJF(std::vector<PSimulator>& processes) {
     std::sort(processes.begin(), processes.end(), [](const PSimulator& a, const PSimulator& b) {
-        return a.bTime < b.bTime;
+        return a.burstT < b.burstT;
     });
 
     int totalWaitingTime = 0;
 
     for (int i = 1; i < SIZE; i++) {
-        processes[i].wTime = processes[i - 1].bTime + processes[i - 1].aTime + processes[i - 1].wTime;
-        totalWaitingTime += processes[i].wTime;
+        processes[i].waitingT = processes[i - 1].burstT + processes[i - 1].arrivalT + processes[i - 1].waitingT;
+        totalWaitingTime += processes[i].waitingT;
     }
 
     double averageWaitingTime = static_cast<double>(totalWaitingTime) / SIZE;
@@ -56,7 +56,7 @@ void SJF(std::vector<PSimulator>& processes) {
     outputFile << "\nScheduling Method: Shortest Job First\nProcess Waiting Times:\n";
 
     for (int i = 0; i < SIZE; i++) {
-        outputFile << "\nP" << processes[i].Name << ": " << processes[i].wTime << " ms";
+        outputFile << "\nP" << processes[i].Name << ": " << processes[i].waitingT << " ms";
     }
 
     outputFile << "\nAverage waiting time: " << averageWaitingTime << " ms\n";
@@ -70,8 +70,8 @@ void PriorityScheduling(std::vector<PSimulator>& processes) {
     int totalWaitingTime = 0;
 
     for (int i = 1; i < SIZE; i++) {
-        processes[i].wTime = processes[i - 1].bTime + processes[i - 1].aTime + processes[i - 1].wTime;
-        totalWaitingTime += processes[i].wTime;
+        processes[i].waitingT = processes[i - 1].burstT + processes[i - 1].arrivalT + processes[i - 1].waitingT;
+        totalWaitingTime += processes[i].waitingT;
     }
     double averageWaitingTime = static_cast<double>(totalWaitingTime) / SIZE;
 
@@ -79,7 +79,7 @@ void PriorityScheduling(std::vector<PSimulator>& processes) {
     outputFile << "\nScheduling Method: Priority Scheduling\nProcess Waiting Times:\n";
 
     for (int i = 0; i < SIZE; i++) {
-        outputFile << "\nP" << processes[i].Name << ": " << processes[i].wTime << " ms";
+        outputFile << "\nP" << processes[i].Name << ": " << processes[i].waitingT << " ms";
     }
 
     outputFile << "\nAverage waiting time: " << averageWaitingTime << " ms\n";
@@ -91,7 +91,7 @@ void RoundR(std::vector<PSimulator>& processes, int quantumTime) {
     int currentTime = 0;
 
     while (!PSimulatorQueue.empty() || currentTime < SIZE) {
-        while (currentTime < SIZE && processes[currentTime].aTime <= currentTime) {
+        while (currentTime < SIZE && processes[currentTime].arrivalT <= currentTime) {
             PSimulatorQueue.push(processes[currentTime]);
             currentTime++;
         }
@@ -100,16 +100,16 @@ void RoundR(std::vector<PSimulator>& processes, int quantumTime) {
             PSimulator currentPSimulator = PSimulatorQueue.front();
             PSimulatorQueue.pop();
 
-            int executionTime = std::min(quantumTime, currentPSimulator.bTime);
-            currentPSimulator.bTime -= executionTime;
+            int executionTime = std::min(quantumTime, currentPSimulator.burstT);
+            currentPSimulator.burstT -= executionTime;
 
             for (int i = currentTime; i < currentTime + executionTime; i++) {
-                processes[i].wTime += executionTime;
+                processes[i].waitingT += executionTime;
             }
 
             currentTime += executionTime;
 
-            if (currentPSimulator.bTime > 0) {
+            if (currentPSimulator.burstT > 0) {
                 PSimulatorQueue.push(currentPSimulator);
             }
         } else {
@@ -119,7 +119,7 @@ void RoundR(std::vector<PSimulator>& processes, int quantumTime) {
 
     int totalWaitingTime = 0;
     for (int i = 0; i < SIZE; i++) {
-        totalWaitingTime += processes[i].wTime;
+        totalWaitingTime += processes[i].waitingT;
     }
 
     double averageWaitingTime = static_cast<double>(totalWaitingTime) / SIZE;
@@ -128,7 +128,7 @@ void RoundR(std::vector<PSimulator>& processes, int quantumTime) {
     outputFile << "\nScheduling Method: RoundR\nProcess Waiting Times:\n";
 
     for (int i = 0; i < SIZE; i++) {
-        outputFile << "\nP" << processes[i].Name << ": " << processes[i].wTime << " ms";
+        outputFile << "\nP" << processes[i].Name << ": " << processes[i].waitingT << " ms";
     }
 
     outputFile << "\nAverage waiting time: " << averageWaitingTime << " ms\n";
@@ -150,7 +150,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    while (inputFile >> processes[i].bTime >> processes[i].aTime >> processes[i].p) {
+    while (inputFile >> processes[i].burstT >> processes[i].arrivalT >> processes[i].p) {
         processes[i].Name = i + 1;
         i++;
     }
@@ -225,7 +225,7 @@ int main(int argc, char** argv) {
             case 5:
                 break;
             default:
-                std::cout << "\nInvalid Option! Please Choose From 1 - 5 \n";
+                std::cout << "\n opps Invalid entry! Please pick between 1 - 5 \n";
                 break;
         }
     } while (option != 5);
